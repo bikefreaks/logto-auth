@@ -29,8 +29,61 @@ return [
 ## Usage
 
 ```php
-$logtoAuth = new bikefreaks\LogtoAuth();
-echo $logtoAuth->echoPhrase('Hello, bikefreaks!');
+// app/Policies/AppServiceProvider.php
+      use BeraniDigital\LibraryLaravelLogtoIo\Facades\LibraryLaravelLogtoIo;
+    public function register(): void
+    {
+        
+        LibraryLaravelLogtoIo::config()->scopes = [
+            \Logto\Sdk\Constants\UserScope::profile,
+            \Logto\Sdk\Constants\UserScope::email,
+            \Logto\Sdk\Constants\UserScope::phone,
+            \Logto\Sdk\Constants\UserScope::identities,
+            \Logto\Sdk\Constants\UserScope::roles,
+        ];
+        LibraryLaravelLogtoIo::config()->resources = [
+          // add your resources here
+        ];
+    }
+```
+
+```php
+// routes/web.php
+Route::get('/auth/callback', function () {
+    try {
+        \bikefreaks\LogtoAuth\Facades\LogtoAuth::handleSignInCallback();
+    }catch (\Logto\Sdk\LogtoException $e){
+        return redirect()->route('login')->with('error', $e->getMessage());
+    }
+    $logToUser = \bikefreaks\LogtoAuth\Facades\LogtoAuth::fetchUserInfo();
+    $user = \App\Models\User::where('logto_id', $logToUser->sub)->first();
+    if(!$user){
+        $user = new \App\Models\User;
+        $user->logto_id = $logToUser->sub;
+        $faker = \Faker\Factory::create();
+        $user->name = $logToUser->name ?? $logToUser->username ?? $logToUser->email ?? $faker->numerify('User ####');
+    }
+    // always fetch latest user's email and phone number after login
+    $user->phone = $logToUser->phone_number;
+    $user->email = $logToUser->email;
+    $user->email_verified_at = $logToUser->email_verified ? now() : null;
+    $user->save();
+
+    \Illuminate\Support\Facades\Auth::login($user);
+    return redirect()->route('home');
+})->name('auth.callback');
+
+Route::get('/login', function () {
+    return redirect(bikefreaks\LogtoAuth\Facades\LogtoAuth::signIn(route('auth.callback')));
+})->name('login');
+
+function logout() {
+    \Illuminate\Support\Facades\Auth::logout();
+    return redirect(bikefreaks\LogtoAuth\Facades\LogtoAuth::signOut(route('home')));
+}
+Route::get('/logout', function () {
+    return logout();
+})->name('logout');
 ```
 
 ## Testing
