@@ -2,7 +2,7 @@
 
 namespace bikefreaks\LogtoAuth;
 
-use B\Extensions\LaravelSession;
+use bikefreaks\LogtoAuth\Extensions\LaravelSession;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use Logto\Sdk\LogtoClient;

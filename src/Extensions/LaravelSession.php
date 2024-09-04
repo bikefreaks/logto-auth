@@ -3,9 +3,10 @@
 namespace bikefreaks\LogtoAuth\Extensions;
 
 use Illuminate\Support\Facades\Session;
+use Logto\Sdk\Storage\Storage;
 use Logto\Sdk\Storage\StorageKey;
 
-class LaravelSession implements \Logto\Sdk\Storage\Storage
+class LaravelSession implements Storage
 {
     public function get(StorageKey $key): ?string
     {
