@@ -1,6 +1,6 @@
 <?php
 
-namespace B\Extensions;
+namespace bikefreaks\LogtoAuth\Extensions;
 
 use Illuminate\Support\Facades\Session;
 use Logto\Sdk\Storage\StorageKey;
