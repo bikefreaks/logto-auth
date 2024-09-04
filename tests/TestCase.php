@@ -2,9 +2,9 @@
 
 namespace bikefreaks\LogtoAuth\Tests;
 
+use bikefreaks\LogtoAuth\LogtoAuthServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use bikefreaks\LogtoAuth\LogtoAuthServiceProvider;
 
 class TestCase extends Orchestra
 {

@@ -2,9 +2,9 @@
 
 namespace bikefreaks\LogtoAuth;
 
+use bikefreaks\LogtoAuth\Commands\LogtoAuthCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use bikefreaks\LogtoAuth\Commands\LogtoAuthCommand;
 
 class LogtoAuthServiceProvider extends PackageServiceProvider
 {

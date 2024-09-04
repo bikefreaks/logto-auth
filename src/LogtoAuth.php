@@ -13,7 +13,6 @@ use Phpfastcache\CacheManager;
 
 class LogtoAuth extends LogtoClient
 {
-
     public function __construct()
     {
         $endpoint = config('logto-io.endpoint');
@@ -29,26 +28,28 @@ class LogtoAuth extends LogtoClient
             config('logto-io.app_id'),
             config('logto-io.app_secret')
         );
-        $this->storage = new LaravelSession();
+        $this->storage = new LaravelSession;
         $this->oidcCore = self::create($this->config->endpoint);
     }
 
     protected static function create(string $logtoEndpoint): OidcCore
     {
         $cacheManager = CacheManager::getInstance('files');
-        $cacheObject = $cacheManager->getItem('logto-oidc-configuration-' . urlencode($logtoEndpoint));
+        $cacheObject = $cacheManager->getItem('logto-oidc-configuration-'.urlencode($logtoEndpoint));
         $cachedConfiguration = $cacheObject->get();
-        if (!$cachedConfiguration) {
-            $client = new Client();
+        if (! $cachedConfiguration) {
+            $client = new Client;
             $cachedConfiguration = $client->get(
-                $logtoEndpoint . '/oidc/.well-known/openid-configuration',
+                $logtoEndpoint.'/oidc/.well-known/openid-configuration',
                 ['headers' => ['user-agent' => '@logto/php', 'accept' => '*/*']]
             )->getBody()->getContents();
-            $cacheObject->set($cachedConfiguration)->expiresAfter(3600);// 1 hour
+            $cacheObject->set($cachedConfiguration)->expiresAfter(3600); // 1 hour
             $cacheManager->save($cacheObject);
         }
+
         return new OidcCore(new OidcProviderMetadata(...json_decode($cachedConfiguration, true)));
     }
+
     public function getSubject(): string
     {
         return $this->fetchUserInfo()->sub;
@@ -61,7 +62,7 @@ class LogtoAuth extends LogtoClient
 
     public function handleSignInCallback(): void
     {
-        if (!($_SERVER['PATH_INFO'] ?? null)) {
+        if (! ($_SERVER['PATH_INFO'] ?? null)) {
             $_SERVER['PATH_INFO'] = parse_url($this->getSignInSession()->redirectUri, PHP_URL_PATH);
         }
 
