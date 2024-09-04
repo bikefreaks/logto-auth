@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace bikefreaks\LogtoAuth\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LogtoAuthCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'logto-auth';
 
     public $description = 'My command';
 
