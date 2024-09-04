@@ -15,18 +15,18 @@ class LogtoAuth extends LogtoClient
 {
     public function __construct()
     {
-        $endpoint = config('logto-io.endpoint');
-        $appId = config('logto-io.app_id');
-        $appSecret = config('logto-io.app_secret');
-        $leeWay = config('logto-io.lee_way');
+        $endpoint = config('logto-auth.endpoint');
+        $appId = config('logto-auth.app_id');
+        $appSecret = config('logto-auth.app_secret');
+        $leeWay = config('logto-auth.lee_way');
         JWT::$leeway = $leeWay;
         if (empty($endpoint) || empty($appId) || empty($appSecret)) {
             throw new \Exception('Logto configuration is not set');
         }
         $this->config = new LogtoConfig(
-            config('logto-io.endpoint'),
-            config('logto-io.app_id'),
-            config('logto-io.app_secret')
+            config('logto-auth.endpoint'),
+            config('logto-auth.app_id'),
+            config('logto-auth.app_secret')
         );
         $this->storage = new LaravelSession;
         $this->oidcCore = self::create($this->config->endpoint);
